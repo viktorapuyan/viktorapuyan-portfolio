@@ -20,7 +20,7 @@ export default function ContactsSection() {
 					I'm always open to discussing new projects, creative ideas, or opportunities.
 				</p>
 				<motion.a
-					href="mailto:your.email@example.com"
+					href="mailto:viktorapuyan.va@gmail.com"
 					whileHover={{ scale: 1.05 }}
 					whileTap={{ scale: 0.95 }}
 					className="inline-block px-8 py-4 bg-zinc-900 dark:bg-zinc-50 text-white dark:text-zinc-900 rounded-full font-medium hover:bg-zinc-700 dark:hover:bg-zinc-200 transition-colors"

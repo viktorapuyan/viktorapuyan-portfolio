@@ -10,6 +10,9 @@ const navItems = [
   { name: 'Contact', href: '#contact' },
 ];
 
+const primaryNavItems = navItems.filter((item) => item.name !== 'Contact');
+const contactNavItem = navItems.find((item) => item.name === 'Contact');
+
 export default function Navbar() {
   const [activeSection, setActiveSection] = useState('about');
 
@@ -50,7 +53,7 @@ export default function Navbar() {
       className="fixed top-0 left-0 right-0 z-50 bg-white/80 dark:bg-black/80 backdrop-blur-md border-b border-zinc-200 dark:border-zinc-800"
     >
       <div className="max-w-6xl mx-auto px-6 py-4">
-        <div className="flex justify-between items-center">
+        <div className="grid grid-cols-[1fr_auto_1fr] items-center">
           <motion.h1
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -60,8 +63,8 @@ export default function Navbar() {
             Viktor Apuyan
           </motion.h1>
 
-          <div className="flex gap-8">
-            {navItems.map((item, index) => (
+          <div className="flex gap-8 justify-self-center">
+            {primaryNavItems.map((item, index) => (
               <motion.a
                 key={item.name}
                 href={item.href}
@@ -82,6 +85,23 @@ export default function Navbar() {
               </motion.a>
             ))}
           </div>
+
+          {contactNavItem && (
+            <motion.a
+              href={contactNavItem.href}
+              onClick={(e) => handleClick(e, contactNavItem.href)}
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.35 }}
+              className={`justify-self-end px-4 py-2 text-sm font-medium rounded-full border transition-colors ${
+                activeSection === contactNavItem.href.substring(1)
+                  ? 'border-zinc-900 bg-zinc-900 text-white dark:border-zinc-50 dark:bg-zinc-50 dark:text-zinc-900'
+                  : 'border-zinc-300 text-zinc-700 hover:border-zinc-900 hover:text-zinc-900 dark:border-zinc-700 dark:text-zinc-300 dark:hover:border-zinc-50 dark:hover:text-zinc-50'
+              }`}
+            >
+              {contactNavItem.name}
+            </motion.a>
+          )}
         </div>
       </div>
     </motion.nav>

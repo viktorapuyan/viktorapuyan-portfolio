@@ -1,6 +1,6 @@
 'use client';
 
-import { AnimatePresence, motion } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { useState } from 'react';
 
 const fadeInUp = {
@@ -39,103 +39,125 @@ const projects = [
 
 export default function ProjectsSection() {
 	const [activeIndex, setActiveIndex] = useState(0);
-	const [direction, setDirection] = useState(1);
-
-	const goToSlide = (nextIndex: number) => {
-		setDirection(nextIndex > activeIndex ? 1 : -1);
-		setActiveIndex(nextIndex);
-	};
 
 	const handlePrevious = () => {
-		setDirection(-1);
 		setActiveIndex((prev) => (prev - 1 + projects.length) % projects.length);
 	};
 
 	const handleNext = () => {
-		setDirection(1);
 		setActiveIndex((prev) => (prev + 1) % projects.length);
 	};
 
-	const currentProject = projects[activeIndex];
+	const handleCardDragEnd = (_event: MouseEvent | TouchEvent | PointerEvent, info: { offset: { x: number }; velocity: { x: number } }) => {
+		const swipePower = Math.abs(info.offset.x) * Math.abs(info.velocity.x);
+
+		if (info.offset.x < -90 || (info.offset.x < 0 && swipePower > 20000)) {
+			handleNext();
+			return;
+		}
+
+		if (info.offset.x > 90 || (info.offset.x > 0 && swipePower > 20000)) {
+			handlePrevious();
+		}
+	};
+
+	const getWrappedIndex = (offset: number) => {
+		return (activeIndex + offset + projects.length) % projects.length;
+	};
+
+	const visibleCards = [
+		{ offset: -1, index: getWrappedIndex(-1) },
+		{ offset: 0, index: getWrappedIndex(0) },
+		{ offset: 1, index: getWrappedIndex(1) }
+	];
 
 	return (
 		<section id="projects" className="min-h-screen flex items-center justify-center px-6 py-24">
 			<motion.div {...fadeInUp} className="max-w-5xl w-full">
-				<div className="flex items-center justify-between mb-10">
+				<div className="mb-12">
 					<h2 className="text-5xl font-bold text-zinc-900 dark:text-zinc-50">Projects</h2>
-					<div className="flex items-center gap-3">
-						<button
-							onClick={handlePrevious}
-							aria-label="Show previous project"
-							className="size-11 rounded-full border border-zinc-300 dark:border-zinc-700 text-zinc-800 dark:text-zinc-100 hover:border-zinc-900 dark:hover:border-zinc-50 transition-colors"
-						>
-							&lt;
-						</button>
-						<button
-							onClick={handleNext}
-							aria-label="Show next project"
-							className="size-11 rounded-full border border-zinc-300 dark:border-zinc-700 text-zinc-800 dark:text-zinc-100 hover:border-zinc-900 dark:hover:border-zinc-50 transition-colors"
-						>
-							&gt;
-						</button>
-					</div>
 				</div>
 
-				<div className="relative overflow-hidden rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/60 min-h-[350px]">
-					<AnimatePresence mode="wait" custom={direction}>
-						<motion.article
-							key={currentProject.title}
-							custom={direction}
-							initial={{ opacity: 0, x: direction > 0 ? 90 : -90 }}
-							animate={{ opacity: 1, x: 0 }}
-							exit={{ opacity: 0, x: direction > 0 ? -90 : 90 }}
-							transition={{ duration: 0.38, ease: 'easeInOut' }}
-							className="p-8 sm:p-10"
-						>
-							<p className="text-xs uppercase tracking-[0.28em] text-zinc-500 dark:text-zinc-400 mb-4">
-								Project {String(activeIndex + 1).padStart(2, '0')}
-							</p>
-							<h3 className="text-3xl sm:text-4xl font-bold text-zinc-900 dark:text-zinc-50 mb-4">
-								{currentProject.title}
-							</h3>
-							<p className="text-zinc-600 dark:text-zinc-300 text-lg leading-relaxed max-w-3xl mb-6">
-								{currentProject.description}
-							</p>
+				<div className="relative h-[430px] sm:h-[470px]" style={{ perspective: '1200px' }}>
+					{visibleCards.map(({ offset, index }) => {
+						const project = projects[index];
+						const isCenter = offset === 0;
 
-							<div className="flex flex-wrap gap-2 mb-8">
-								{currentProject.stack.map((tech) => (
-									<span
-										key={tech}
-										className="px-3 py-1.5 text-xs sm:text-sm rounded-full border border-zinc-300 dark:border-zinc-700 text-zinc-700 dark:text-zinc-300"
+						return (
+							<motion.article
+								key={project.title}
+								drag={isCenter ? 'x' : false}
+								dragConstraints={{ left: 0, right: 0 }}
+								dragElastic={0.25}
+								dragSnapToOrigin
+								onDragEnd={isCenter ? handleCardDragEnd : undefined}
+								onClick={() => {
+									if (offset < 0) {
+										handlePrevious();
+									}
+									if (offset > 0) {
+										handleNext();
+									}
+								}}
+								animate={{
+									x: offset * 320,
+									scale: isCenter ? 1 : 0.84,
+									opacity: isCenter ? 1 : 0.35,
+									rotateY: isCenter ? 0 : offset > 0 ? -14 : 14,
+									zIndex: isCenter ? 20 : 10
+								}}
+								transition={{ duration: 0.45, ease: 'easeInOut' }}
+								className={`absolute top-0 left-1/2 -translate-x-1/2 w-[74vw] max-w-[620px] h-full rounded-2xl border bg-zinc-50 dark:bg-zinc-900/60 p-8 sm:p-10 ${
+									isCenter
+										? 'border-zinc-200 dark:border-zinc-800 cursor-grab active:cursor-grabbing'
+										: 'border-zinc-300/60 dark:border-zinc-700/60 cursor-pointer'
+								}`}
+							>
+								<p className="text-xs uppercase tracking-[0.28em] text-zinc-500 dark:text-zinc-400 mb-4">
+									Project {String(index + 1).padStart(2, '0')}
+								</p>
+								<h3 className="text-2xl sm:text-4xl font-bold text-zinc-900 dark:text-zinc-50 mb-4 line-clamp-2">
+									{project.title}
+								</h3>
+								<p className="text-zinc-600 dark:text-zinc-300 leading-relaxed mb-6 line-clamp-4">
+									{project.description}
+								</p>
+
+								<div className="flex flex-wrap gap-2 mb-8">
+									{project.stack.map((tech) => (
+										<span
+											key={tech}
+											className="px-3 py-1.5 text-xs sm:text-sm rounded-full border border-zinc-300 dark:border-zinc-700 text-zinc-700 dark:text-zinc-300"
+										>
+											{tech}
+										</span>
+									))}
+								</div>
+
+								<div className="flex items-center gap-6">
+									<a
+										href={project.projectUrl}
+										className="text-sm font-semibold text-zinc-900 dark:text-zinc-50 hover:underline"
 									>
-										{tech}
-									</span>
-								))}
-							</div>
-
-							<div className="flex items-center gap-6">
-								<a
-									href={currentProject.projectUrl}
-									className="text-sm font-semibold text-zinc-900 dark:text-zinc-50 hover:underline"
-								>
-									View Project -&gt;
-								</a>
-								<a
-									href={currentProject.githubUrl}
-									className="text-sm font-semibold text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-50"
-								>
-									GitHub -&gt;
-								</a>
-							</div>
-						</motion.article>
-					</AnimatePresence>
+										View Project -&gt;
+									</a>
+									<a
+										href={project.githubUrl}
+										className="text-sm font-semibold text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-50"
+									>
+										GitHub -&gt;
+									</a>
+								</div>
+							</motion.article>
+						);
+					})}
 				</div>
 
 				<div className="mt-7 flex justify-center gap-2.5">
 					{projects.map((project, index) => (
 						<button
 							key={project.title}
-							onClick={() => goToSlide(index)}
+							onClick={() => setActiveIndex(index)}
 							aria-label={`Go to ${project.title}`}
 							className={`h-2 rounded-full transition-all ${
 								index === activeIndex

@@ -5,9 +5,11 @@ import { FaChartLine } from 'react-icons/fa';
 import {
 	SiCplusplus,
 	SiCss,
+	SiGit,
 	SiHtml5,
 	SiJavascript,
 	SiMysql,
+	SiNodedotjs,
 	SiOpencv,
 	SiPandas,
 	SiPython,
@@ -31,8 +33,11 @@ const skills = [
 	{ name: 'Pandas', Icon: SiPandas },
 	{ name: 'Matplotlib', Icon: FaChartLine },
 	{ name: 'OpenCV', Icon: SiOpencv },
-    { name: 'SQL', Icon: SiMysql}
+    { name: 'SQL', Icon: SiMysql},
+    { name: 'Git', Icon: SiGit},
+    { name: 'Node.js', Icon: SiNodedotjs} // Placeholder for Node.js icon, replace with actual icon if available
 ];
+
 
 export default function SkillsSection() {
 	return (

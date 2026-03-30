@@ -2,6 +2,7 @@
 
 import { motion } from 'framer-motion';
 import { useEffect, useMemo, useState } from 'react';
+import { IoDownload } from 'react-icons/io5';
 
 const fadeInUp = {
 	initial: { opacity: 0, y: 60 },
@@ -24,6 +25,17 @@ export default function AboutSection() {
 	const [imageError, setImageError] = useState(false);
 
 	const activePhrase = useMemo(() => typePhrases[phraseIndex], [phraseIndex]);
+
+	const scrollToContacts = () => {
+		const contactsSection = document.getElementById('contact');
+		if (contactsSection) {
+			contactsSection.scrollIntoView({ behavior: 'smooth' });
+		}
+	};
+
+	const downloadResume = () => {
+		window.open('https://drive.google.com/file/d/1fk2KVNU5-EyrQUNFXKMbU520jwHDGov_/view?usp=sharing', '_blank');
+	};
 
 	useEffect(() => {
 		const typingDelay = isDeleting ? 40 : 80;
@@ -89,6 +101,23 @@ export default function AboutSection() {
 						My focus is creating modern digital experiences with strong visual
 						direction and reliable front-end architecture.
 					</p>
+
+					<div className="flex gap-4 mt-8">
+						<button
+							onClick={scrollToContacts}
+							className="px-6 py-3 bg-gradient-to-r from-cyan-400 to-sky-400 text-zinc-950 font-semibold rounded-lg hover:shadow-[0_0_20px_rgba(34,211,238,0.4)] transition-all duration-300 hover:scale-105"
+						>
+							Get in Touch
+						</button>
+
+						<button
+							onClick={downloadResume}
+							className="px-6 py-3 border border-cyan-400/60 text-cyan-300 font-semibold rounded-lg hover:bg-cyan-400/10 transition-all duration-300 hover:shadow-[0_0_20px_rgba(34,211,238,0.2)] hover:scale-105 flex items-center gap-2"
+						>
+							<IoDownload className="text-lg" />
+							Download Resume
+						</button>
+					</div>
 				</div>
 
 				<div className="flex justify-center lg:justify-end">

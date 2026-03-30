@@ -5,9 +5,10 @@ import { useState, useEffect } from 'react';
 
 const navItems = [
   { name: 'About', href: '#about' },
+  { name: 'Resume', href: '#resume' },
   { name: 'Skills', href: '#skills' },
   { name: 'Projects', href: '#projects' },
-  { name: 'Contact', href: '#contact' },
+  { name: 'Contact', href: '#contact' }
 ];
 
 const primaryNavItems = navItems.filter((item) => item.name !== 'Contact');

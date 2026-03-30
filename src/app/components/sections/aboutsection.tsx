@@ -3,6 +3,7 @@
 import { motion } from 'framer-motion';
 import { useEffect, useMemo, useState } from 'react';
 import { IoDownload } from 'react-icons/io5';
+import { FiGithub, FiLinkedin } from 'react-icons/fi';
 
 const fadeInUp = {
 	initial: { opacity: 0, y: 60 },
@@ -83,7 +84,7 @@ export default function AboutSection() {
 			>
 				<div>
 					<p className="text-xs sm:text-sm tracking-[0.35em] uppercase text-cyan-400/90 mb-5">
-						About Me
+						Hi! I'm
 					</p>
 					<h2 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-zinc-50 mb-4 leading-tight">
 						Viktor Apuyan
@@ -97,9 +98,8 @@ export default function AboutSection() {
 					</div>
 
 					<p className="text-zinc-300/90 text-base sm:text-lg max-w-xl leading-relaxed">
-						I design and build interfaces that feel clean, intentional, and fast.
-						My focus is creating modern digital experiences with strong visual
-						direction and reliable front-end architecture.
+						A passionate data scientist with expertise in machine learning, statistical analysis, and data visualization. 
+						Turning complex data into actionable insights that drive business decisions.
 					</p>
 
 					<div className="flex gap-4 mt-8">
@@ -117,6 +117,26 @@ export default function AboutSection() {
 							<IoDownload className="text-lg" />
 							Download Resume
 						</button>
+					</div>
+
+					<div className="flex gap-4 mt-6">
+						<a
+							href="https://github.com/viktorapuyan"
+							target="_blank"
+							rel="noopener noreferrer"
+							className="w-12 h-12 rounded-full border border-cyan-400/60 flex items-center justify-center text-cyan-300 hover:bg-cyan-400/10 transition-all duration-300 hover:shadow-[0_0_20px_rgba(34,211,238,0.3)] hover:scale-110"
+						>
+							<FiGithub className="text-xl" />
+						</a>
+
+						<a
+							href="https://www.linkedin.com/in/viktor-angelo-apuyan-0b2374189/"
+							target="_blank"
+							rel="noopener noreferrer"
+							className="w-12 h-12 rounded-full border border-cyan-400/60 flex items-center justify-center text-cyan-300 hover:bg-cyan-400/10 transition-all duration-300 hover:shadow-[0_0_20px_rgba(34,211,238,0.3)] hover:scale-110"
+						>
+							<FiLinkedin className="text-xl" />
+						</a>
 					</div>
 				</div>
 
